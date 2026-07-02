@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128" role="img" aria-label="Easy Worktree Switcher icon">
+  <rect width="128" height="128" rx="24" fill="#101820"/>
+  <path d="M39 64h50" fill="none" stroke="#f6f1e7" stroke-width="10" stroke-linecap="round"/>
+  <path d="M64 37v54" fill="none" stroke="#f6f1e7" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="39" cy="64" r="13" fill="#ff6b35"/>
+  <circle cx="64" cy="37" r="13" fill="#4ecdc4"/>
+  <circle cx="64" cy="91" r="13" fill="#f7c948"/>
+  <circle cx="89" cy="64" r="13" fill="#7f5af0"/>
+</svg>
