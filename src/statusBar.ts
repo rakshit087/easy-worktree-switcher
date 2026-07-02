@@ -39,7 +39,7 @@ export async function refreshStatusItem(): Promise<void> {
   try {
     const root = await git(workspaceRoot, ["rev-parse", "--show-toplevel"]);
     const current = await getCurrentWorktree(root);
-    statusItem.text = `$(git-branch) ${current.label}`;
+    statusItem.text = `$(list-tree) ${current.label}`;
     statusItem.tooltip = `Git Worktree: ${current.worktree}`;
     statusItem.show();
   } catch {
