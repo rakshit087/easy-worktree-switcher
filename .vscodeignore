@@ -1,0 +1,11 @@
+.git/**
+.gitignore
+.github/**
+.vscode/**
+node_modules/**
+src/**
+tsconfig.json
+package-lock.json
+media/icon.svg
+out/**/*.map
+*.vsix
