@@ -14,7 +14,7 @@ export function createStatusItem(context: vscode.ExtensionContext): void {
     return;
   }
 
-  const priority = getConfig().get<number>("statusBarPriority", 10000);
+  const priority = getConfig().get<number>("statusBarPriority", 1000000);
   statusItem = vscode.window.createStatusBarItem(
     "easyWorktreeSwitcher.picker",
     vscode.StatusBarAlignment.Left,

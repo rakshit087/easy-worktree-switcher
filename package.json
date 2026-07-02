@@ -114,8 +114,8 @@
         },
         "easyWorktreeSwitcher.statusBarPriority": {
           "type": "number",
-          "default": 10000,
-          "description": "Priority for the left status bar worktree picker. Higher values appear further left."
+          "default": 1000000,
+          "description": "Priority for the left status bar worktree picker. Higher values appear further left. Defaults higher than VS Code's built-in branch indicator so the picker appears before it."
         },
         "easyWorktreeSwitcher.showStatusBarItem": {
           "type": "boolean",

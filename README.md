@@ -50,7 +50,7 @@ Selecting an existing worktree opens it in a new VS Code window. If VS Code alre
 ```json
 {
   "easyWorktreeSwitcher.worktreeDirectory": "../worktrees",
-  "easyWorktreeSwitcher.statusBarPriority": 10000,
+  "easyWorktreeSwitcher.statusBarPriority": 1000000,
   "easyWorktreeSwitcher.showStatusBarItem": true,
   "easyWorktreeSwitcher.copyEnvFiles": true
 }
