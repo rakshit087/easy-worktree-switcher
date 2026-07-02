@@ -1,0 +1,133 @@
+{
+  "name": "easy-worktree-switcher",
+  "displayName": "Easy Worktree Switcher",
+  "description": "A fast, Zed-style Git worktree picker, creator, and switcher for VS Code.",
+  "version": "0.0.1",
+  "publisher": "rakshit087",
+  "author": {
+    "name": "Rakshit"
+  },
+  "license": "GPL-3.0-only",
+  "pricing": "Free",
+  "galleryBanner": {
+    "color": "#101820",
+    "theme": "dark"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rakshit087/easy-worktree-switcher.git"
+  },
+  "bugs": {
+    "url": "https://github.com/rakshit087/easy-worktree-switcher/issues"
+  },
+  "homepage": "https://github.com/rakshit087/easy-worktree-switcher#readme",
+  "engines": {
+    "vscode": "^1.90.0"
+  },
+  "categories": [
+    "SCM Providers",
+    "Other"
+  ],
+  "icon": "media/icon.png",
+  "keywords": [
+    "git",
+    "worktree",
+    "worktrees",
+    "switcher",
+    "zed",
+    "branch",
+    "source control",
+    "scm"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "extensionKind": [
+    "workspace"
+  ],
+  "main": "./out/extension.js",
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "vscode:prepublish": "npm run compile",
+    "package": "vsce package --out easy-worktree-switcher.vsix",
+    "publish:marketplace": "vsce publish",
+    "publish:openvsx": "ovsx publish"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.43",
+    "@types/vscode": "1.90.0",
+    "@vscode/vsce": "^3.9.2",
+    "ovsx": "^1.0.2",
+    "typescript": "^5.5.2"
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "easyWorktreeSwitcher.pick",
+        "title": "Worktree",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.switch",
+        "title": "Switch Worktree",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.create",
+        "title": "Create Worktree",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.createFromCurrent",
+        "title": "Create Worktree from Current Branch",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.createFromDefault",
+        "title": "Create Worktree from Default Branch",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.openInNewWindow",
+        "title": "Open Worktree in New Window",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.delete",
+        "title": "Delete Worktree",
+        "category": "Git"
+      },
+      {
+        "command": "easyWorktreeSwitcher.refresh",
+        "title": "Refresh Worktree Picker",
+        "category": "Git"
+      }
+    ],
+    "configuration": {
+      "title": "Easy Worktree Switcher",
+      "properties": {
+        "easyWorktreeSwitcher.worktreeDirectory": {
+          "type": "string",
+          "default": "../worktrees",
+          "description": "Directory where new Git worktrees are created. Relative paths are resolved from the repository root. When this resolves outside the repository, the repository folder name is appended to avoid collisions."
+        },
+        "easyWorktreeSwitcher.statusBarPriority": {
+          "type": "number",
+          "default": 10000,
+          "description": "Priority for the left status bar worktree picker. Higher values appear further left."
+        },
+        "easyWorktreeSwitcher.showStatusBarItem": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show the worktree picker in the status bar."
+        },
+        "easyWorktreeSwitcher.copyEnvFiles": {
+          "type": "boolean",
+          "default": true,
+          "description": "Copy .env and .env.local files from the repository root into newly created worktrees."
+        }
+      }
+    }
+  }
+}
