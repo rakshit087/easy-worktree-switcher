@@ -1,7 +1,7 @@
 # Easy Worktree Switcher
 
-[![Visual Studio Marketplace Version](https://img.shields.io/visual-studio-marketplace/v/rakshit087.easy-worktree-switcher?label=VS%20Marketplace)](https://marketplace.visualstudio.com/items?itemName=rakshit087.easy-worktree-switcher)
-[![Open VSX Version](https://img.shields.io/open-vsx/v/rakshit087/easy-worktree-switcher?label=Open%20VSX)](https://open-vsx.org/extension/rakshit087/easy-worktree-switcher)
+[![VS Marketplace Installs](https://vsmarketplacebadges.dev/installs/rakshit087.easy-worktree-switcher.svg)](https://marketplace.visualstudio.com/items?itemName=rakshit087.easy-worktree-switcher)
+[![Open VSX Downloads](https://img.shields.io/open-vsx/dt/rakshit087/easy-worktree-switcher?label=Open%20VSX)](https://open-vsx.org/extension/rakshit087/easy-worktree-switcher)
 [![GitHub stars](https://img.shields.io/github/stars/rakshit087/easy-worktree-switcher?style=social)](https://github.com/rakshit087/easy-worktree-switcher/stargazers)
 [![License: GPL-3.0](https://img.shields.io/badge/license-GPL--3.0-blue.svg)](LICENSE)
 
