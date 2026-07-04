@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.0.3
+
+- Add a force-delete fallback when normal worktree deletion fails, with an explicit warning before removing local changes.
+- Use a trash icon for the delete action in the worktree picker.
+
 ## 0.0.2
 
 - Raise the default status bar priority so the worktree picker appears before VS Code's built-in branch indicator.

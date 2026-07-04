@@ -2,7 +2,7 @@
   "name": "easy-worktree-switcher",
   "displayName": "Easy Worktree Switcher",
   "description": "A fast, Zed-style Git worktree picker, creator, and switcher for VS Code.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "publisher": "rakshit087",
   "author": {
     "name": "Rakshit"
