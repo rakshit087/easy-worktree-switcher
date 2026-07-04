@@ -41,9 +41,45 @@ export function registerCommands(context: vscode.ExtensionContext): void {
 }
 
 const deleteWorktreeButton: vscode.QuickInputButton = {
-  iconPath: new vscode.ThemeIcon("close"),
+  iconPath: new vscode.ThemeIcon("trash"),
   tooltip: "Delete Worktree"
 };
+
+async function removeWorktree(root: string, worktreePath: string): Promise<boolean> {
+  try {
+    await git(root, ["worktree", "remove", worktreePath]);
+    return true;
+  } catch (error) {
+    const action = await vscode.window.showErrorMessage(
+      `Failed to delete worktree: ${(error as Error).message}`,
+      "Force Delete"
+    );
+
+    if (action !== "Force Delete") {
+      return false;
+    }
+
+    const confirmation = await vscode.window.showWarningMessage(
+      "Force deleting may lose changes in the worktree.",
+      { modal: true, detail: "Any uncommitted or untracked changes in this worktree will be permanently lost." },
+      "Force Delete"
+    );
+
+    if (confirmation !== "Force Delete") {
+      return false;
+    }
+
+    try {
+      await git(root, ["worktree", "remove", "--force", worktreePath]);
+      return true;
+    } catch (forceError) {
+      vscode.window.showErrorMessage(
+        `Failed to force delete worktree: ${(forceError as Error).message}`
+      );
+      return false;
+    }
+  }
+}
 
 async function buildWorktreePickItems(root: string): Promise<WorktreePickItem[]> {
   const [currentBranch, defaultBranchRef, worktrees] = await Promise.all([
@@ -118,16 +154,11 @@ async function showWorktreePicker(): Promise<void> {
     }
 
     quickPick.busy = true;
-    try {
-      await git(root, ["worktree", "remove", worktree.worktree]);
+    const removed = await removeWorktree(root, worktree.worktree);
+    if (removed) {
       await refreshStatusItem();
-      await refresh();
-    } catch (error) {
-      vscode.window.showErrorMessage(
-        `Failed to delete worktree: ${(error as Error).message}`
-      );
-      quickPick.busy = false;
     }
+    await refresh();
   });
 
   quickPick.onDidAccept(async () => {
@@ -321,18 +352,18 @@ async function deleteWorktree(): Promise<void> {
     return;
   }
 
-  await vscode.window.withProgress(
+  const removed = await vscode.window.withProgress(
     {
       location: vscode.ProgressLocation.Notification,
       title: `Deleting worktree ${picked.worktree.label}`,
       cancellable: false
     },
-    async () => {
-      await git(root, ["worktree", "remove", picked.worktree.worktree]);
-    }
+    () => removeWorktree(root, picked.worktree.worktree)
   );
 
-  await refreshStatusItem();
+  if (removed) {
+    await refreshStatusItem();
+  }
 }
 
 async function pickWorktree(root: string, title: string): Promise<Worktree | undefined> {
