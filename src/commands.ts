@@ -35,6 +35,7 @@ export function registerCommands(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand("easyWorktreeSwitcher.openInNewWindow", () =>
       openWorktreeInNewWindow()
     ),
+    vscode.commands.registerCommand("easyWorktreeSwitcher.rename", () => renameWorktree()),
     vscode.commands.registerCommand("easyWorktreeSwitcher.delete", () => deleteWorktree()),
     vscode.commands.registerCommand("easyWorktreeSwitcher.refresh", () => refreshStatusItem())
   );
@@ -43,6 +44,11 @@ export function registerCommands(context: vscode.ExtensionContext): void {
 const deleteWorktreeButton: vscode.QuickInputButton = {
   iconPath: new vscode.ThemeIcon("trash"),
   tooltip: "Delete Worktree"
+};
+
+const renameWorktreeButton: vscode.QuickInputButton = {
+  iconPath: new vscode.ThemeIcon("edit"),
+  tooltip: "Rename Worktree"
 };
 
 async function removeWorktree(root: string, worktreePath: string): Promise<boolean> {
@@ -114,7 +120,10 @@ async function buildWorktreePickItems(root: string): Promise<WorktreePickItem[]>
       detail: worktree.worktree,
       action: "switch",
       worktree,
-      buttons: worktree.isCurrent ? undefined : [deleteWorktreeButton]
+      buttons:
+        worktree.isCurrent || worktree.isMain
+          ? undefined
+          : [renameWorktreeButton, deleteWorktreeButton]
     }))
   ];
 }
@@ -140,6 +149,12 @@ async function showWorktreePicker(): Promise<void> {
   quickPick.onDidTriggerItemButton(async (event) => {
     const worktree = event.item.worktree;
     if (!worktree) {
+      return;
+    }
+
+    if (event.button === renameWorktreeButton) {
+      await promptToRenameWorktree(root, worktree);
+      await refresh();
       return;
     }
 
@@ -309,6 +324,91 @@ async function createWorktree(source?: WorktreeSource): Promise<void> {
   await openFolder(target, true);
 }
 
+async function renameWorktree(): Promise<void> {
+  const root = await requireGitRoot();
+  if (!root) {
+    return;
+  }
+
+  const candidates = (await listWorktrees(root)).filter(
+    (worktree) => !worktree.isCurrent && !worktree.isMain
+  );
+
+  if (candidates.length === 0) {
+    vscode.window.showInformationMessage("No renameable Git worktrees found.");
+    return;
+  }
+
+  const picked = await vscode.window.showQuickPick(
+    candidates.map<WorktreeOnlyPickItem>((worktree) => ({
+      label: worktree.label,
+      description: worktree.branch ?? "detached HEAD",
+      detail: worktree.worktree,
+      worktree
+    })),
+    {
+      title: "Rename Git Worktree",
+      placeHolder: "Choose a linked worktree to rename"
+    }
+  );
+
+  if (picked) {
+    await promptToRenameWorktree(root, picked.worktree);
+  }
+}
+
+async function promptToRenameWorktree(
+  root: string,
+  worktree: Worktree
+): Promise<boolean> {
+  const currentPath = normalizePath(worktree.worktree);
+  const name = await vscode.window.showInputBox({
+    title: "Rename Git Worktree",
+    prompt: "Enter a new folder name for this worktree.",
+    value: worktree.label,
+    validateInput: (value) => {
+      const validationError = validateWorktreeName(value);
+      if (validationError) {
+        return validationError;
+      }
+
+      const target = normalizePath(path.join(path.dirname(worktree.worktree), value));
+      if (target === currentPath) {
+        return "Enter a different name.";
+      }
+      if (fs.existsSync(target)) {
+        return "A file or folder with this name already exists.";
+      }
+
+      return undefined;
+    }
+  });
+
+  if (name === undefined) {
+    return false;
+  }
+
+  const target = path.join(path.dirname(worktree.worktree), name);
+
+  try {
+    await vscode.window.withProgress(
+      {
+        location: vscode.ProgressLocation.Notification,
+        title: `Renaming worktree ${worktree.label} to ${name}`,
+        cancellable: false
+      },
+      () => git(root, ["worktree", "move", worktree.worktree, target])
+    );
+    await refreshStatusItem();
+    return true;
+  } catch (error) {
+    vscode.window.showErrorMessage(
+      `Failed to rename worktree: ${(error as Error).message}`
+    );
+    return false;
+  }
+}
+
 async function deleteWorktree(): Promise<void> {
   const root = await requireGitRoot();
   if (!root) {
@@ -317,7 +417,8 @@ async function deleteWorktree(): Promise<void> {
 
   const current = normalizePath(root);
   const candidates = (await listWorktrees(root)).filter(
-    (worktree) => normalizePath(worktree.worktree) !== current
+    (worktree) =>
+      normalizePath(worktree.worktree) !== current && !worktree.isMain
   );
 
   if (candidates.length === 0) {

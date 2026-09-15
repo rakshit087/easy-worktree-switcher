@@ -17,6 +17,7 @@ export interface Worktree {
   head?: string;
   detached?: boolean;
   isCurrent: boolean;
+  isMain: boolean;
 }
 
 export interface WorktreePickItem extends vscode.QuickPickItem {

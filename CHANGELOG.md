@@ -1,5 +1,9 @@
 # Changelog
 
+## Unreleased
+
+- Add a command and picker action for renaming linked worktrees with `git worktree move`.
+
 ## 0.0.3
 
 - Add a force-delete fallback when normal worktree deletion fails, with an explicit warning before removing local changes.

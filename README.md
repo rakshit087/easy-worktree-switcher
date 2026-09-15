@@ -7,7 +7,7 @@
 
 I wanted the worktree flow from Zed inside VS Code: one small status bar item, one quick picker, and no ceremony when I need a second checkout for a fix, review, or experiment.
 
-This extension adds that flow to VS Code. It lists the worktrees attached to the current repository, opens another worktree in a new window, creates fresh detached worktrees from either the current branch or your default branch, and removes linked worktrees you are no longer using.
+This extension adds that flow to VS Code. It lists the worktrees attached to the current repository, opens another worktree in a new window, creates fresh detached worktrees from either the current branch or your default branch, and renames or removes linked worktrees you are no longer using.
 
 ## Why I Built This
 
@@ -27,6 +27,7 @@ Easy Worktree Switcher is intentionally small:
 - Create a worktree from the current branch/HEAD.
 - Create a worktree from the repository default branch.
 - Open any linked worktree in a new VS Code window.
+- Rename linked worktrees without changing their checked-out branch.
 - Delete linked worktrees without touching the currently open workspace.
 - Configurable base directory for new worktrees.
 - Optional `.env` and `.env.local` copying into newly created worktrees.
@@ -76,6 +77,7 @@ When `easyWorktreeSwitcher.copyEnvFiles` is enabled, `.env` and `.env.local` fro
 | `Git: Create Worktree from Current Branch` | Creates from `HEAD`. |
 | `Git: Create Worktree from Default Branch` | Creates from `origin/HEAD`, `init.defaultBranch`, or `main`. |
 | `Git: Open Worktree in New Window` | Opens a chosen worktree in a new window. |
+| `Git: Rename Worktree` | Renames the folder for a linked worktree. |
 | `Git: Delete Worktree` | Removes a linked worktree after confirmation. |
 | `Git: Refresh Worktree Picker` | Refreshes the status bar worktree label. |
 
@@ -84,3 +86,5 @@ When `easyWorktreeSwitcher.copyEnvFiles` is enabled, `.env` and `.env.local` fro
 - VS Code 1.90 or newer.
 - Git available on your `PATH`.
 - A workspace folder inside a Git repository.
+
+Git cannot move the repository's main worktree or linked worktrees that contain submodules, so those worktrees cannot be renamed by the extension. The currently open worktree is also excluded to avoid invalidating the active VS Code workspace path.

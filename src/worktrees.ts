@@ -43,13 +43,16 @@ export async function listWorktrees(root: string): Promise<Worktree[]> {
   const normalizedRoot = normalizePath(root);
   return entries
     .filter((entry) => entry.worktree && !entry.bare)
-    .map((entry) => toWorktree(entry.worktree, entry, normalizedRoot));
+    .map((entry, index) =>
+      toWorktree(entry.worktree, entry, normalizedRoot, index === 0)
+    );
 }
 
 export function toWorktree(
   worktreePath: string,
   entry?: WorktreeListEntry,
-  normalizedRoot?: string
+  normalizedRoot?: string,
+  isMain = false
 ): Worktree {
   return {
     worktree: worktreePath,
@@ -59,7 +62,8 @@ export function toWorktree(
     detached: entry?.detached,
     isCurrent: normalizedRoot
       ? normalizePath(worktreePath) === normalizedRoot
-      : false
+      : false,
+    isMain
   };
 }
 

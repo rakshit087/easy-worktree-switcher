@@ -94,6 +94,11 @@
         "category": "Git"
       },
       {
+        "command": "easyWorktreeSwitcher.rename",
+        "title": "Rename Worktree",
+        "category": "Git"
+      },
+      {
         "command": "easyWorktreeSwitcher.delete",
         "title": "Delete Worktree",
         "category": "Git"
