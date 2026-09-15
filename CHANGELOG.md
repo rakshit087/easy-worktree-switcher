@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.0.4
 
 - Add a command and picker action for renaming linked worktrees with `git worktree move`.
 
